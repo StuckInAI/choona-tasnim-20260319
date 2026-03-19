@@ -1,22 +1,22 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm'
 import { IsNotEmpty, IsBoolean } from 'class-validator'
 
-@Entity()
+@Entity('todos')
 export class Todo {
   @PrimaryGeneratedColumn()
-  id: number
+  id!: number
 
   @Column()
   @IsNotEmpty({ message: 'Title is required' })
-  title: string
+  title!: string
 
   @Column({ default: false })
   @IsBoolean()
-  completed: boolean
+  completed!: boolean
 
   @CreateDateColumn()
-  createdAt: Date
+  createdAt!: Date
 
   @UpdateDateColumn()
-  updatedAt: Date
+  updatedAt!: Date
 }

@@ -2,6 +2,8 @@ import TodoList from '@/components/TodoList'
 import AddTodoForm from '@/components/AddTodoForm'
 import { getTodos } from '@/lib/database'
 
+export const dynamic = 'force-dynamic'
+
 export default async function Home() {
   const todos = await getTodos()
 
