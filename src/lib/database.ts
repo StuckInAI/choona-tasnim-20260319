@@ -1,10 +1,31 @@
 import 'reflect-metadata'
 import { DataSource } from 'typeorm'
 import { Todo } from '@/entities/Todo'
+import * as fs from 'fs'
+import * as path from 'path'
+
+// Determine database path - use /tmp for containerized environments
+const getDatabasePath = (): string => {
+  if (process.env.DATABASE_PATH) {
+    return process.env.DATABASE_PATH
+  }
+  // Check if we're in a read-only environment (like some Docker containers)
+  const dbPath = './database/todos.db'
+  const dbDir = path.dirname(dbPath)
+  try {
+    if (!fs.existsSync(dbDir)) {
+      fs.mkdirSync(dbDir, { recursive: true })
+    }
+    return dbPath
+  } catch {
+    // Fall back to /tmp if we can't create the directory
+    return '/tmp/todos.db'
+  }
+}
 
 const AppDataSource = new DataSource({
   type: 'sqlite',
-  database: process.env.DATABASE_PATH || './database/todos.db',
+  database: getDatabasePath(),
   entities: [Todo],
   synchronize: process.env.DATABASE_SYNCHRONIZE === 'true',
   logging: process.env.DATABASE_LOGGING === 'true',
